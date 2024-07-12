@@ -7,7 +7,7 @@ class Flecha:
         self.y = y
         self.velocidad = 10 * direccion
         self.direccion = direccion
-        self.img = pygame.image.load(r'Imagenes\arrow\arrow_.png')  # Asegúrate de que la ruta sea correcta
+        self.img = pygame.image.load(r'Imagenes\arrow\arrow_.png')
 
     def move(self):
         self.x += self.velocidad
@@ -15,5 +15,5 @@ class Flecha:
     def draw_flecha(self, pantalla):
         pantalla.blit(self.img, (self.x, self.y))
 
-    def flecha_fuera(self):  # Asegúrate de que el nombre del método es correcto
+    def flecha_fuera(self):
         return self.x < 0 or self.x > 800
