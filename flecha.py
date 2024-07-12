@@ -29,7 +29,7 @@ class Flecha:
 
     def move(self):
         '''
-        Mueve la flecha en la dirección especificada por su velocidad.
+        Mueve la flecha en la direccion especificada por su velocidad.
         '''
         self.x += self.velocidad
 
@@ -44,9 +44,9 @@ class Flecha:
 
     def flecha_fuera(self):
         '''
-        Verifica si la flecha ha salido de la pantalla.
+        Verifica si la flecha salio de la pantalla.
 
         Returns:
-            bool: True si la flecha está fuera de los límites de la pantalla, False en caso contrario.
+            bool: True si la flecha está fuera de los limites de la pantalla, False en caso contrario.
         '''
         return self.x < 0 or self.x > ANCHO
