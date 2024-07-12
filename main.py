@@ -11,8 +11,15 @@ from Monedas import Moneda
 
 pygame.init()
 
-
 def inicializar():
+    '''
+    Inicializa la pantalla, el fondo y la musica del juego.
+
+    Returns:
+        pantalla (pygame.Surface): La superficie de la ventana del juego.
+        fondo_pantalla (pygame.Surface): La imagen de fondo del juego.
+        volumen_musica (float): El volumen inicial de la musica.
+    '''
     pantalla = pygame.display.set_mode((ANCHO, ALTO))
     fondo_pantalla = pygame.image.load(r'Imagenes\escenario\terror.png')
     pygame.display.set_caption("Mostrar Coordenadas del Mouse")
@@ -22,12 +29,30 @@ def inicializar():
     return pantalla, fondo_pantalla, volumen_musica
 
 def cargar_plataformas(archivo):
+    '''
+    Carga las plataformas desde un archivo JSON.
+
+    Args:
+        archivo (str): La ruta del archivo JSON que contiene los datos de las plataformas.
+
+    Returns:
+        list: Una lista de objetos Plataforma.
+    '''
     with open(archivo, 'r') as file:
         plataformas_data = json.load(file)
     plataformas = [Plataforma(data['x'], data['y'], data['ancho'], data['alto'], imagen_plataforma) for data in plataformas_data]
     return plataformas
 
 def cargar_enemigos(archivo):
+    '''
+    Carga los enemigos desde un archivo CSV.
+
+    Args:
+        archivo (str): La ruta del archivo CSV que contiene los datos de los enemigos.
+
+    Returns:
+        list: Una lista de objetos Enemy.
+    '''
     enemigos = []
     with open(archivo, newline='') as file:
         reader = csv.DictReader(file)
@@ -36,21 +61,42 @@ def cargar_enemigos(archivo):
             enemigos.append(enemigo)
     return enemigos
 
-
 def cargar_monedas(archivo):
+    '''
+    Carga las monedas desde un archivo JSON.
+
+    Args:
+        archivo (str): La ruta del archivo JSON que contiene los datos de las monedas.
+
+    Returns:
+        list: Una lista de objetos Moneda.
+    '''
     with open(archivo, 'r') as file:
         monedas_data = json.load(file)
     monedas = [Moneda(data['x'], data['y']) for data in monedas_data]
     return monedas
 
 def mostrar_texto(texto, fuente, color, superficie, x, y):
+    '''
+    Muestra un texto en la superficie especificada.
+
+    Args:
+        texto (str): El texto a mostrar.
+        fuente (pygame.font.Font): La fuente del texto.
+        color (tuple): El color del texto.
+        superficie (pygame.Surface): La superficie donde se dibujara el texto.
+        x (int): La coordenada x de la posicion del texto.
+        y (int): La coordenada y de la posicion del texto.
+    '''
     texto_surface = fuente.render(texto, True, color)
     texto_rect = texto_surface.get_rect()
     texto_rect.topleft = (x, y)
     superficie.blit(texto_surface, texto_rect)
 
-
 def pantalla_inicio():
+    '''
+    Muestra la pantalla de inicio con las opciones para comenzar el juego, configurarlo o salir.
+    '''
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -75,8 +121,10 @@ def pantalla_inicio():
         pantalla.blit(texto_salir, (ANCHO // 2 - texto_salir.get_width() // 2, ALTO // 2 + 50))
         pygame.display.update()
 
-
 def pantalla_configuracion():
+    '''
+    Muestra la pantalla de configuracion para ajustar el volumen de la musica.
+    '''
     global volumen_musica
     while True:
         for event in pygame.event.get():
@@ -101,8 +149,10 @@ def pantalla_configuracion():
         pantalla.blit(texto_instrucciones, (ANCHO // 2 - texto_instrucciones.get_width() // 2, ALTO // 2))
         pygame.display.update()
 
-
 def reiniciar_juego():
+    '''
+    Reinicia el juego cargando nuevamente el personaje, enemigos, plataformas y monedas.
+    '''
     global arquero, enemigos, plataformas, monedas, jugando
     arquero = Personaje(40, 400)
     enemigos = cargar_enemigos('enemigos.csv')
@@ -110,8 +160,10 @@ def reiniciar_juego():
     monedas = cargar_monedas('Coin.json')
     jugando = True
 
-
 def pantalla_pausa():
+    '''
+    Muestra la pantalla de pausa con opciones para reanudar o reiniciar el juego.
+    '''
     pausado = True
     while pausado:
         for event in pygame.event.get():
@@ -139,20 +191,34 @@ def pantalla_pausa():
 
         pygame.display.update()
 
-
 def mostrar_hud(pantalla):
+    '''
+    Muestra el HUD del juego, incluyendo el volumen de la música y el puntaje.
+
+    Args:
+        pantalla (pygame.Surface): La superficie de la ventana del juego.
+    '''
     fuente_hud = pygame.font.Font(None, 36)
     mostrar_texto(f'Volumen: {int(volumen_musica * 100)}%', fuente_hud, (255, 255, 255), pantalla, 10, 50)
     font = pygame.font.SysFont(None, 36)
     score_text = font.render("Score: " + str(score), True, BLANCO)
     pantalla.blit(score_text, (500, 20))
 
-
 def verificar_victoria(enemigos):
+    '''
+    Verifica si todos los enemigos han sido derrotados.
+
+    Args:
+        enemigos (list): Lista de objetos Enemy.
+
+    Returns:
+        bool: True si todos los enemigos estan derrotados, False en caso contrario.
+    '''
     for enemigo in enemigos:
         if enemigo.esta_vivo():
             return False
     return True
+
 
 pantalla, fondo_pantalla, volumen_musica = inicializar()
 clock = pygame.time.Clock()
